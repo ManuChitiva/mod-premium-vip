@@ -63,16 +63,16 @@ enum Trainers
 
 enum Mounts
 {
-    HEARTBRAKER = 71342,
-    INVENSIBLE = 72286,
-    JHEAVENLY_STEED = 75614,
-    LORD_CUERVO = 41252,
-    CENIZAS_ALAR = 40192,
-    MECA_JARLEY_HORDA = 55531,
-    CHOOPER_ALI = 60424,
-    ZEBRA_PRESTA = 49322,
-    TANKE_BATALLA = 26054,
-    RAYA_ABISAL = 39801
+    HUMAN_MOUNT     = 470,
+    ORC_MOUNT       = 6653,
+    GNOME_MOUNT     = 17454,
+    NIGHTELF_MOUNT  = 8394,
+    DWARF_MOUNT     = 6899,
+    UNEAD_MOUNT     = 17463,
+    TAUREN_MOUNT    = 64657,
+    TROLL_MOUNT     = 8395,
+    BLOODELF_MOUNT  = 35022,
+    DRAENEI_MOUNT   = 34406
 };
 
 enum PremiumGossip
@@ -456,34 +456,34 @@ public:
             switch (player->getRace())
             {
             case RACE_HUMAN:
-                player->CastSpell(player, HEARTBRAKER);
+                player->CastSpell(player, HUMAN_MOUNT);
                 break;
             case RACE_ORC:
-                player->CastSpell(player, INVENSIBLE);
+                player->CastSpell(player, ORC_MOUNT);
                 break;
             case RACE_GNOME:
-                player->CastSpell(player, JHEAVENLY_STEED);
+                player->CastSpell(player, GNOME_MOUNT);
                 break;
             case RACE_NIGHTELF:
-                player->CastSpell(player, LORD_CUERVO);
+                player->CastSpell(player, NIGHTELF_MOUNT);
                 break;
             case RACE_DWARF:
-                player->CastSpell(player, CENIZAS_ALAR);
+                player->CastSpell(player, DWARF_MOUNT);
                 break;
             case RACE_DRAENEI:
-                player->CastSpell(player, MECA_JARLEY_HORDA);
+                player->CastSpell(player, DRAENEI_MOUNT);
                 break;
             case RACE_UNDEAD_PLAYER:
-                player->CastSpell(player, CHOOPER_ALI);
+                player->CastSpell(player, UNEAD_MOUNT);
                 break;
             case RACE_TAUREN:
-                player->CastSpell(player, ZEBRA_PRESTA);
+                player->CastSpell(player, TAUREN_MOUNT);
                 break;
             case RACE_TROLL:
-                player->CastSpell(player, TANKE_BATALLA);
+                player->CastSpell(player, TROLL_MOUNT);
                 break;
             case RACE_BLOODELF:
-                player->CastSpell(player, RAYA_ABISAL);
+                player->CastSpell(player, BLOODELF_MOUNT);
                 break;
             }
             break;
