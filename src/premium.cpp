@@ -350,9 +350,9 @@ public:
         case TELEPORT_NAXXRAMAS:
         {
             CloseGossipMenuFor(player);
-            player->TeleportTo(571, 3669.9521f, -1276.4491f, 23.51689f, 1.6455703f);
+            player->TeleportTo(571, 7238.032f, 119.508f, 119.61256f, 0.76323426f);
             player->SetHomebind(
-                WorldLocation(571, 3669.9521f, -1276.4491f, 23.51689f, 1.6455703f),
+                WorldLocation(571, 7238.032f, 119.508f, 119.61256f, 0.76323426f),
                 65 // ZoneId Dragonblight
             );
             break;
