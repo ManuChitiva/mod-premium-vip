@@ -6,8 +6,11 @@
 #include "ScriptedGossip.h"
 #include "ScriptMgr.h"
 #include "Spell.h"
+#include "SpellMgr.h"
 #include "InstanceSaveMgr.h"
 #include "Chat.h"
+#include "Log.h"
+#include <sstream>
 
 enum PremiumTeleports
 {
@@ -88,7 +91,8 @@ enum PremiumGossip
     GOSSIP_MAIL,
     GOSSIP_BANK,
     GOSSIP_AUCTION_HOUSE,
-    GOSSIP_FACTION
+    GOSSIP_FACTION,
+    GOSSIP_BUFFS
 };
 enum PremiumActions
 {
@@ -96,7 +100,8 @@ enum PremiumActions
     PREMIUM_LEAVE_COMBAT = GOSSIP_ACTION_INFO_DEF + 51,
     PREMIUM_RESET_TALENTS = GOSSIP_ACTION_INFO_DEF + 52,
     PREMIUM_OPEN_BANK = GOSSIP_ACTION_INFO_DEF + 53,
-    PREMIUM_OPEN_MAIL = GOSSIP_ACTION_INFO_DEF + 54
+    PREMIUM_OPEN_MAIL = GOSSIP_ACTION_INFO_DEF + 54,
+    PREMIUM_APPLY_BUFFS = GOSSIP_ACTION_INFO_DEF + 55
 };
 
 class premium_account : public ItemScript
@@ -179,6 +184,8 @@ public:
             GOSSIP_SENDER_MAIN,
             PREMIUM_LEAVE_COMBAT);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Reset Talents", GOSSIP_SENDER_MAIN, PREMIUM_RESET_TALENTS);
+        if (sConfigMgr->GetOption<bool>("Premium.Buffs.Enable", true))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "VIP Buffs", GOSSIP_SENDER_MAIN, PREMIUM_APPLY_BUFFS);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Bank", GOSSIP_SENDER_MAIN, PREMIUM_OPEN_BANK);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Mail", GOSSIP_SENDER_MAIN, PREMIUM_OPEN_MAIL);
         SendGossipMenuFor(player, PREMIUM_MENU_TEXT, item->GetGUID());
@@ -218,6 +225,12 @@ public:
             ChatHandler(player->GetSession()).SendNotification("Talentos reiniciados correctamente.");
 
             player->CastSpell(player, 31726);
+            break;
+        }
+        case PREMIUM_APPLY_BUFFS:
+        {
+            CloseGossipMenuFor(player);
+            ApplyVipBuffs(player);
             break;
         }
 
@@ -608,6 +621,95 @@ public:
             break;
         }
         }
+    }
+
+    uint32 GetSpellForLevel(uint32 spellId, Player* player)
+    {
+        uint32 level = player->GetLevel();
+        uint32 maxLevel = sConfigMgr->GetOption<uint32>("Premium.Buffs.MaxLevel", 80);
+        if (maxLevel == 0)
+            maxLevel = 80;
+
+        if (level >= maxLevel)
+            return sSpellMgr->GetLastSpellInChain(spellId);
+
+        uint32 firstSpell = sSpellMgr->GetFirstSpellInChain(spellId);
+        if (!firstSpell)
+            return spellId;
+
+        uint32 spellCount = 0;
+        for (uint32 nextSpell = firstSpell; nextSpell; nextSpell = sSpellMgr->GetNextSpellInChain(nextSpell))
+            ++spellCount;
+
+        if (spellCount <= 1)
+            return firstSpell;
+
+        uint32 spellIndex = (level * spellCount) / maxLevel;
+        if (spellIndex >= spellCount)
+            spellIndex = spellCount - 1;
+
+        uint32 selectedSpell = firstSpell;
+        for (uint32 i = 0; i < spellIndex; ++i)
+        {
+            uint32 nextSpell = sSpellMgr->GetNextSpellInChain(selectedSpell);
+            if (!nextSpell)
+                break;
+            selectedSpell = nextSpell;
+        }
+
+        return selectedSpell;
+    }
+
+    void ApplyVipBuffs(Player* player)
+    {
+        if (!sConfigMgr->GetOption<bool>("Premium.Buffs.Enable", true))
+            return;
+
+        bool buffByLevel = sConfigMgr->GetOption<bool>("Premium.Buffs.ByLevel", true);
+        bool cureResSickness = sConfigMgr->GetOption<bool>("Premium.Buffs.CureRes", true);
+        std::string spellList = sConfigMgr->GetOption<std::string>("Premium.Buffs.Spells", "48162;48074;48470;48170;43223;467");
+
+        if (cureResSickness && player->HasAura(15007))
+            player->RemoveAura(15007);
+
+        std::stringstream ss(spellList);
+        std::string token;
+        uint32 appliedBuffs = 0;
+
+        while (std::getline(ss, token, ';'))
+        {
+            if (token.empty())
+                continue;
+
+            uint32 spellId = 0;
+            try
+            {
+                spellId = static_cast<uint32>(std::stoul(token));
+            }
+            catch (...)
+            {
+                LOG_WARN("module.premium", "Invalid spell id '{}' in Premium.Buffs.Spells", token);
+                continue;
+            }
+
+            if (spellId == 0)
+                continue;
+
+            uint32 castSpellId = buffByLevel ? GetSpellForLevel(spellId, player) : spellId;
+            if (!sSpellMgr->GetSpellInfo(castSpellId))
+            {
+                LOG_WARN("module.premium", "Spell id '{}' (resolved '{}') not found for Premium.Buffs.Spells", spellId, castSpellId);
+                continue;
+            }
+
+            player->CastSpell(player, castSpellId, true);
+            ++appliedBuffs;
+        }
+
+        if (appliedBuffs > 0)
+            ChatHandler(player->GetSession()).SendNotification("Buffs aplicados correctamente.");
+        else
+            ChatHandler(player->GetSession()).SendNotification("No se aplicaron buffs. Revisa Premium.Buffs.Spells en premium.conf.");
     }
 
     void ApplyRandomMorph(Player *player)

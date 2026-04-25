@@ -75,3 +75,37 @@ MailBox = 1
 #       Default:    60 - (Seconds)
 
 Premium.NpcDuration = 60
+
+##################################################################################################################
+#    Premium.Buffs.Enable
+#        Description: Enable VIP buffs option in the premium menu
+#        Default:     1  - (Enabled)
+#                     0  - (Disabled)
+
+Premium.Buffs.Enable = 1
+
+#    Premium.Buffs.ByLevel
+#        Description: Use spell rank scaling by player level
+#        Default:     1  - (Enabled)
+#                     0  - (Disabled)
+
+Premium.Buffs.ByLevel = 1
+
+#    Premium.Buffs.CureRes
+#        Description: Remove Resurrection Sickness (aura 15007) when using VIP buffs
+#        Default:     1  - (Enabled)
+#                     0  - (Disabled)
+
+Premium.Buffs.CureRes = 1
+
+#    Premium.Buffs.MaxLevel
+#        Description: Maximum player level used for rank scaling
+#        Default:     80
+
+Premium.Buffs.MaxLevel = 80
+
+#    Premium.Buffs.Spells
+#        Description: Spell list separated by ';'. Use base spell IDs from rank chains.
+#        Default: Power Word: Fortitude, Prayer of Spirit, Mark of the Wild, Shadow Protection, Food, Thorns
+
+Premium.Buffs.Spells = 48162;48074;48470;48170;43223;467
