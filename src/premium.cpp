@@ -27,7 +27,11 @@ enum PremiumTeleports
     TELEPORT_UNDERCITY = GOSSIP_ACTION_INFO_DEF + 36,
     TELEPORT_ICC = GOSSIP_ACTION_INFO_DEF + 37,
     TELEPORT_ULDUAR = GOSSIP_ACTION_INFO_DEF + 38,
-    TELEPORT_DALARAN = GOSSIP_ACTION_INFO_DEF + 39
+    TELEPORT_DALARAN = GOSSIP_ACTION_INFO_DEF + 39,
+    TELEPORT_NAXXRAMAS = GOSSIP_ACTION_INFO_DEF + 40,
+    TELEPORT_VEGA_TUERCESPINA = GOSSIP_ACTION_INFO_DEF + 41,
+    TELEPORT_TEMPLO_OSCURO = GOSSIP_ACTION_INFO_DEF + 42,
+    TELEPORT_TANARIS = GOSSIP_ACTION_INFO_DEF + 43
 };
 enum Vendors
 {
@@ -305,6 +309,10 @@ public:
                 AddGossipItemFor(player, GOSSIP_ICON_CHAT, "ICC", GOSSIP_SENDER_MAIN, TELEPORT_ICC);
                 AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Ulduar", GOSSIP_SENDER_MAIN, TELEPORT_ULDUAR);
                 AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Dalaran", GOSSIP_SENDER_MAIN, TELEPORT_DALARAN);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Naxxramas", GOSSIP_SENDER_MAIN, TELEPORT_NAXXRAMAS);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Vega de Tuercespina", GOSSIP_SENDER_MAIN, TELEPORT_VEGA_TUERCESPINA);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Templo Oscuro", GOSSIP_SENDER_MAIN, TELEPORT_TEMPLO_OSCURO);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Tanaris", GOSSIP_SENDER_MAIN, TELEPORT_TANARIS);
             }
             else
             {
@@ -314,6 +322,10 @@ public:
                 AddGossipItemFor(player, GOSSIP_ICON_CHAT, "ICC", GOSSIP_SENDER_MAIN, TELEPORT_ICC);
                 AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Ulduar", GOSSIP_SENDER_MAIN, TELEPORT_ULDUAR);
                 AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Dalaran", GOSSIP_SENDER_MAIN, TELEPORT_DALARAN);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Naxxramas", GOSSIP_SENDER_MAIN, TELEPORT_NAXXRAMAS);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Vega de Tuercespina", GOSSIP_SENDER_MAIN, TELEPORT_VEGA_TUERCESPINA);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Templo Oscuro", GOSSIP_SENDER_MAIN, TELEPORT_TEMPLO_OSCURO);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Tanaris", GOSSIP_SENDER_MAIN, TELEPORT_TANARIS);
             }
 
             SendGossipMenuFor(player, PREMIUM_MENU_TEXT, item->GetGUID());
@@ -332,6 +344,46 @@ public:
             player->SetHomebind(
                 WorldLocation(571, 5805.3013f, 623.0144f, 647.8444f, 1.5371346f),
                 4395 // ZoneId Dalaran
+            );
+            break;
+        }
+        case TELEPORT_NAXXRAMAS:
+        {
+            CloseGossipMenuFor(player);
+            player->TeleportTo(571, 3669.9521f, -1276.4491f, 23.51689f, 1.6455703f);
+            player->SetHomebind(
+                WorldLocation(571, 3669.9521f, -1276.4491f, 23.51689f, 1.6455703f),
+                65 // ZoneId Dragonblight
+            );
+            break;
+        }
+        case TELEPORT_VEGA_TUERCESPINA:
+        {
+            CloseGossipMenuFor(player);
+            player->TeleportTo(0, -14306.509f, 519.2262f, 8.6378f, 0.6177706f);
+            player->SetHomebind(
+                WorldLocation(0, -14306.509f, 519.2262f, 8.6378f, 0.6177706f),
+                33 // ZoneId Stranglethorn Vale
+            );
+            break;
+        }
+        case TELEPORT_TEMPLO_OSCURO:
+        {
+            CloseGossipMenuFor(player);
+            player->TeleportTo(530, -3642.6003f, 317.1553f, 34.967464f, 3.0732708f);
+            player->SetHomebind(
+                WorldLocation(530, -3642.6003f, 317.1553f, 34.967464f, 3.0732708f),
+                3520 // ZoneId Shadowmoon Valley
+            );
+            break;
+        }
+        case TELEPORT_TANARIS:
+        {
+            CloseGossipMenuFor(player);
+            player->TeleportTo(1, -7199.855f, -3738.1934f, 8.369994f, 5.676056f);
+            player->SetHomebind(
+                WorldLocation(1, -7199.855f, -3738.1934f, 8.369994f, 5.676056f),
+                440 // ZoneId Tanaris
             );
             break;
         }
